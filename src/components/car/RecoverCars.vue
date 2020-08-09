@@ -19,7 +19,7 @@
             <!-- Table -->
             <el-table :data="carList" stripe>
                 <el-table-column label="#" type="index"></el-table-column>
-                <el-table-column label="拥有者" prop="owner_id"></el-table-column>
+                <el-table-column label="拥有者" prop="username"></el-table-column>
                 <el-table-column label="品牌" prop="brand"></el-table-column>
                 <el-table-column label="车牌" prop="license"></el-table-column>
                 <el-table-column label="载重量" prop="dead_weight"></el-table-column>

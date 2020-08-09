@@ -95,7 +95,7 @@
             </span>
         </el-dialog>
         <!-- Set role dialog -->
-        <el-dialog title="分配角色" :visible.sync="setRoleDgialogVisible" width="40%" @close="setRoleCloseDialog">
+        <el-dialog title="分配角色" :visible.sync="setRoleDialogVisible" width="40%" @close="setRoleCloseDialog">
             <el-form>
                 <p>当前的用户：{{ userInfo.username }}</p>
                 <p>当前的角色：{{ userInfo.role }}</p>
@@ -163,7 +163,7 @@
                 userListSize: 0,
                 addDialogVisible: false,
                 editDialogVisible: false,
-                setRoleDgialogVisible: false,
+                setRoleDialogVisible: false,
                 selectedRole: '',
             }
         },

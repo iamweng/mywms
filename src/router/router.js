@@ -12,20 +12,20 @@ import Cars from '../components/car/Cars.vue'
 import RecoverCars from '../components/car/RecoverCars.vue'
 import QueryCars from '../components/car/QueryCars.vue'
 
-import Roles from '../components/permission/Roles.vue'
+import Roles from '../components/system/Roles.vue'
+import Wips from '../components/system/Wips.vue'
+
 
 import QueryGoods from '../components/produce/QueryGoods.vue'
 import RecoverGoods from '../components/produce/RecoverGoods.vue'
 import Goods from '../components/produce/Goods.vue'
 
 import Add from '../components/order/Add.vue'
-
 import Orders from '../components/order/Orders.vue'
 import RecoverOrders from '../components/order/RecoverOrders.vue'
 import QueryOrders from '../components/order/QueryOrders.vue'
 
 
-import Reports from '../components/report/Reports.vue'
 
 
 
@@ -49,20 +49,18 @@ const router =  new Router({
                 {path: '/recovercars', component: RecoverCars},
                 {path: '/querycars', component: QueryCars},
 
-
                 {path: '/roles', component: Roles},
+                {path: '/wips', component: Wips},
 
                 {path: '/goods', component: Goods},
                 {path: '/querygoods', component: QueryGoods},
                 {path: '/recovergoods', component: RecoverGoods},
                 
                 {path: '/orders/add', component: Add},
-
                 {path: '/orders', component: Orders},
                 {path: '/recoverorders', component: RecoverOrders},
                 {path: '/queryorders', component: QueryOrders},
-                
-                {path: '/reports', component: Reports},
+
             ]
         },
     ]

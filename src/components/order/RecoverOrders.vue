@@ -14,9 +14,9 @@
                 <el-table-column type="index" label="#"></el-table-column>
                 <el-table-column label="ID" prop="id"></el-table-column>
                 <el-table-column label="订单编号" prop="number"></el-table-column>
-                <el-table-column label="承运用户" prop="carrier_user_id"></el-table-column>
-                <el-table-column label="承运车辆" prop="carrier_car_id"></el-table-column>
-                <el-table-column label="货物ID" prop="goods_id"></el-table-column>
+                <el-table-column label="承运用户" prop="username"></el-table-column>
+                <el-table-column label="承运车辆" prop="license"></el-table-column>
+                <el-table-column label="货物名称" prop="goodsname"></el-table-column>
                 <el-table-column label="出发城市" prop="from_city"></el-table-column>
                 <el-table-column label="到达城市" prop="to_city"></el-table-column>
                 <el-table-column label="是否付款" >
