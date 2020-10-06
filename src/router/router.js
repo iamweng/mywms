@@ -25,12 +25,6 @@ import Orders from '../components/order/Orders.vue'
 import RecoverOrders from '../components/order/RecoverOrders.vue'
 import QueryOrders from '../components/order/QueryOrders.vue'
 
-
-
-
-
-
-
 Vue.use(Router)
 
 const router =  new Router({
@@ -55,7 +49,7 @@ const router =  new Router({
                 {path: '/goods', component: Goods},
                 {path: '/querygoods', component: QueryGoods},
                 {path: '/recovergoods', component: RecoverGoods},
-                
+
                 {path: '/orders/add', component: Add},
                 {path: '/orders', component: Orders},
                 {path: '/recoverorders', component: RecoverOrders},

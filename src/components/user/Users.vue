@@ -106,11 +106,11 @@
                 </p>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="setRoleDgialogVisible = false">取 消</el-button>
+                <el-button @click="setRoleDialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="setRole">确 定</el-button>
             </span>
         </el-dialog>
-    </div> 
+    </div>
 </template>
 
 <script>
@@ -247,7 +247,7 @@
             },
             async showSetRoleDialog(userInfo) {
                 this.userInfo = userInfo
-                this.setRoleDgialogVisible = true
+                this.setRoleDialogVisible = true
                 const result = await this.$http.get('roles')
                 console.log(result)
                 if(result.data.code !== 200) return this.$message.error(result.data.msg)
@@ -255,12 +255,11 @@
                 this.roleList = result.data.data
             },
             async setRole() {
-                // if(!this.selectedRoleId) return this.$message.error(result.data.msg)
                 const result = await this.$http.patch('users/' + this.userInfo.id + '/role',{role: this.selectedRole})
                 console.log(result)
                 if(result.data.code !== 201) return this.$message.error(result.data.msg)
                 this.$message.success(result.data.msg)
-                this.setRoleDgialogVisible = false
+                this.setRoleDialogVisible = false
                 this.getUserList()
             }
         },

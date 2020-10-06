@@ -7,7 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css' // ElementUI
 import router from './router/router.js' // Router
 import './assets/css/global.css'  // Global CSS
 import axios from 'axios' // Axios
-import TreeTable  from 'vue-table-with-tree-grid' // vue-table-with-tree-grid 
+// import TreeTable  from 'vue-table-with-tree-grid' // vue-table-with-tree-grid
 // import QuillEditor from 'vue-quill-editor'  // vue-quill-editor
 // import 'quill/dist/quill.core.css'  // vue-quill-editor
 // import 'quill/dist/quill.bubble.css'  // vue-quill-editor
@@ -17,7 +17,7 @@ import NProgress from 'nprogress' // nprogress
 import 'nprogress/nprogress.css'  // nprogress
 
 // Set axios baseURL
-axios.defaults.baseURL = "http://127.0.0.1:8888/api/v1/"
+axios.defaults.baseURL = "http://192.168.30.100:8888/api/v1/"
 
 // Set axios request interceptor
 axios.interceptors.request.use(config => {
@@ -34,7 +34,7 @@ axios.interceptors.response.use(config => {NProgress.done(); return config})
 Vue.prototype.$http = axios // Axios
 Vue.config.productionTip = false
 Vue.use(ElementUI); // ElementUI
-Vue.component('tree-table',TreeTable)  // vue-table-with-tree-grid
+// Vue.component('tree-table',TreeTable)  // vue-table-with-tree-grid
 // Vue.use(QuillEditor) // vue-quill-editor
 // Vue.prototype.$echarts = echarts // echarts
 
