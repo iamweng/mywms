@@ -20,9 +20,9 @@
                 <!-- Tab -->
                 <el-tabs tab-position="left" v-model="activeStep">
                     <el-tab-pane label="基本信息" name="0">
-                        <el-form-item label="请选择承运用户" label-width="200px">
-                                <el-select v-model="selectedUser" placeholder="请选择">
-                                    <el-option v-for="(item, index) in userList" :key="index" :label="item.username" :value="item.id"> </el-option>
+                        <el-form-item label="请选择承运货物" label-width="200px">
+                                <el-select v-model="selectedGoods" placeholder="请选择" @change="getCarList()">
+                                    <el-option v-for="(item, index) in goodsList" :key="index" :label="item.name" :value="item.id"> </el-option>
                                 </el-select>
                         </el-form-item>
                         <el-form-item label="请选择承运车辆" label-width="200px">
@@ -30,9 +30,9 @@
                                     <el-option v-for="(item, index) in carList" :key="index" :label="item.license" :value="item.id"> </el-option>
                                 </el-select>
                         </el-form-item>
-                        <el-form-item label="请选择承运货物" label-width="200px">
-                                <el-select v-model="selectedGoods" placeholder="请选择">
-                                    <el-option v-for="(item, index) in goodsList" :key="index" :label="item.name" :value="item.id"> </el-option>
+                        <el-form-item label="请选择承运用户" label-width="200px">
+                                <el-select v-model="selectedUser" placeholder="请选择">
+                                    <el-option v-for="(item, index) in userList" :key="index" :label="item.username" :value="item.id"> </el-option>
                                 </el-select>
                         </el-form-item>
                         <el-button type="primary" class="submitButton" @click="addOrder">添加商品</el-button>
@@ -49,11 +49,19 @@ import _ from 'lodash'
 export default {
     data() {
         return{
+            goodsQueryInfo: {
+                    query: "",
+                    pagenum: 1,
+                    pagesize: 10000,
+                    category: "courier_false"
+            },
             queryInfo: {
                     query: "",
                     pagenum: 1,
                     pagesize: 10000,
+                    category: "city"
             },
+            weight: "",
             activeStep: 0,
             selectedUser: null,
             selectedCar: null,
@@ -62,10 +70,9 @@ export default {
             carList: [],
             goodsList: [],
             headerObject: {Authorization: window.sessionStorage.getItem('token')},
-
         }
     },
-    created(){this.getGoodsList(), this.getUserList(), this.getCarList()},
+    created(){this.getGoodsList()},
     methods: {
         async addOrder() {
             const result = await this.$http.post('orders',{"carrieruserid": this.selectedUser, "carriercarid": this.selectedCar, "goodsid": this.selectedGoods})
@@ -75,25 +82,57 @@ export default {
             this.$router.push('/orders')
         },
         async getUserList() {
+            this.userList.splice(0, this.userList.length)
             const result = await this.$http.get('users',{params: this.queryInfo})
             console.log(result)
             if(result.data.code !== 200) return this.$message.error(result.data.msg)
             this.$message.success(result.data.msg)
             this.userList = result.data.data.users
+            for (var i = 0; i < this.userList.length; i++) {
+                if (this.userList[i].status == true) {
+                    this.userList.splice(i, 1)
+                    i = 0
+                }
+            }
         },
         async getCarList() {
+            this.carList.splice(0, this.carList.length)
+            var goodsIndex = 0
+            for ( goodsIndex = 0; goodsIndex < this.goodsList.length; goodsIndex ++) {
+                if (this.goodsList[goodsIndex].id == this.selectedGoods) {
+                    this.queryInfo.query = this.goodsList[goodsIndex].from_city
+                    console.log(this.queryInfo.query)
+                    break
+                }
+            }
+            
             const result = await this.$http.get('cars',{params: this.queryInfo})
             console.log(result)
             if(result.data.code !== 200) return this.$message.error(result.data.msg)
             this.$message.success(result.data.msg)
             this.carList = result.data.data.cars
+            for (var i = 0; i < this.carList.length; i++) {
+                if (this.carList[i].dead_weight < this.goodsList[goodsIndex].weight || this.carList[i].statys == true) {
+                    this.carList.splice(i, 1)
+                    i--
+                }
+            }
+            this.getUserList()
         },
         async getGoodsList() {
-            const result = await this.$http.get('goods',{params: this.queryInfo})
+            const result = await this.$http.get('goods',{params: this.goodsQueryInfo})
             console.log(result)
             if(result.data.code !== 200) return this.$message.error(result.data.msg)
             this.$message.success(result.data.msg)
             this.goodsList = result.data.data.goods
+            for (var i = 0; i < this.goodsList.length; i++) {
+                console.log(this.goodsList[i].courier_number)
+                if (this.goodsList[i].courier_number.length > 0) {
+                    this.goodsList.splice(i, 1)
+                    i-- 
+                }
+            }
+            
         },
     },
 }

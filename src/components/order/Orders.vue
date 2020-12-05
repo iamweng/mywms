@@ -5,9 +5,14 @@
             <el-row :gutter="20">
                 <!-- Input -->
                 <el-col :span="8">  
-                    <el-input placeholder="请输入内容" v-model="queryInfo.query" @clear="getOrderList"  @keyup.enter.native="getOrderList" clearable>
+                    <el-input placeholder="请输入部分订单编号或所需条件" v-model="queryInfo.query" @clear="getOrderList"  @keyup.enter.native="getOrderList" clearable>
                         <el-button slot="append" icon="el-icon-search" @click="getOrderList"></el-button>
                     </el-input>
+                </el-col>
+                <el-col :span="4">
+                    <el-select v-model="queryInfo.category" placeholder="请选择" @change="getOrderList">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
                 </el-col>
                 <el-col :span="4">
                     <el-button @click="redirectToAddOrderPage" type="primary">新建订单</el-button>
@@ -17,24 +22,25 @@
                 <!-- <el-table-column type="index" label="#"></el-table-column> -->
                 <el-table-column width="50px" label="ID" prop="id"></el-table-column>
                 <el-table-column label="订单编号" prop="number"></el-table-column>
+                <el-table-column label="运输单号" prop="courier_number" width="200px"></el-table-column>
                 <el-table-column label="承运用户" prop="username"></el-table-column>
                 <el-table-column label="承运车辆" prop="license"></el-table-column>
                 <el-table-column label="货物名称" prop="goodsname"></el-table-column>
                 <el-table-column label="出发城市" prop="from_city"></el-table-column>
                 <el-table-column label="到达城市" prop="to_city"></el-table-column>
-                <el-table-column label="是否付款" >
+                <el-table-column label="是否出发">
                     <template slot-scope="scope">
-                        <el-tag v-if="scope.row.payment_status == 1" type="success">已付款</el-tag>
-                        <el-tag v-if="scope.row.payment_status == 0" type="danger">未付款</el-tag>
+                        <el-tag v-if="scope.row.courier_status == 1" type="success">已出发</el-tag>
+                        <el-tag v-if="scope.row.courier_status == 0" type="danger">未出发</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="是否发货">
+                <el-table-column label="是否到达">
                     <template slot-scope="scope">
-                        <el-tag v-if="scope.row.courier_status == 1" type="success">已发货</el-tag>
-                        <el-tag v-if="scope.row.courier_status == 0" type="danger">未发货</el-tag>
+                        <el-tag v-if="scope.row.status == 1" type="success">已到达</el-tag>
+                        <el-tag v-if="scope.row.status == 0" type="danger">未到达</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="下单时间" prop="created_at">
+                <el-table-column label="创建时间" prop="created_at">
                 </el-table-column>
                 <el-table-column label="操作" width="200px">
                     <template slot-scope="scope">
@@ -82,7 +88,19 @@
 export default {
     data() {
         return {
-            queryInfo: {query: '', pagesize: 10, pagenum: 1},
+            queryInfo: {query: '', pagesize: 10, pagenum: 1, category: "all"},
+                options: [
+                    {value: 'all', label: '全部'},
+                    {value: 'username', label: '承运用户'},
+                    {value: 'license', label: '承运车辆'},
+                    {value: 'goodsname', label: '承运货物'},
+                    {value: 'from_city', label: '出发城市'},
+                    {value: 'to_city', label: '目标城市'},
+                    {value: 'courier_true', label: '正在运输'},
+                    {value: 'courier_false', label: '暂未运输'},
+                    {value: 'goods_true', label: '已经到达'},
+                    {value: 'goods_false', label: '还未到达'},
+                ],
             orderList: [],
             orderListSize: 0,
             currentOrder: {},
@@ -102,6 +120,7 @@ export default {
             this.getOrderList()
         },
         async getOrderList() {
+            this.orderList.splice(0, this.orderList.length)
             const result = await this.$http.get('orders',{params: this.queryInfo})
             console.log(result)
             if(result.data.code !== 200) return this.$message.error(result.data.msg)

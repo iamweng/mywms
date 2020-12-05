@@ -11,7 +11,7 @@
             <!-- Input -->
             <el-row :gutter="20">
                 <el-col :span="7">
-                    <el-input v-model="carid" placeholder="请输入内容" clearable @keyup.enter.native="getCarList" @clear="getCarList">
+                    <el-input v-model="carid" placeholder="请输入车辆 ID" clearable @keyup.enter.native="getCarList" @clear="getCarList">
                         <el-button slot="append" icon="el-icon-search" @click="getCarList"></el-button>
                     </el-input>
                 </el-col>
@@ -19,7 +19,6 @@
             <!-- Table -->
             <el-table :data="carList" stripe>
                 <el-table-column label="#" type="index"></el-table-column>
-                <el-table-column label="所有者" prop="username"></el-table-column>
                 <el-table-column label="品牌" prop="brand"></el-table-column>
                 <el-table-column label="车牌" prop="license"></el-table-column>
                 <el-table-column label="载重量" prop="dead_weight"></el-table-column>
@@ -42,9 +41,6 @@
         <!-- Edit car dialog -->
         <el-dialog title="修改车辆" :visible.sync="editDialogVisible" width="40%" @close="editCarCloseDialog">
             <el-form :model="editCarForm" :rules="editCarRules" ref="editCarFormRef" label-width="80px">
-                <el-form-item label="拥有者" prop="owner_id">
-                    <el-input v-model="editCarForm.owner_id" disabled></el-input>
-                </el-form-item>
                 <el-form-item label="品牌" prop="brand">
                     <el-input v-model="editCarForm.brand" @keyup.enter.native="editCar"></el-input>
                 </el-form-item>
@@ -72,14 +68,12 @@
             return {
                 carid: '',
                 editCarForm: {
-                    owner_id: null,
                     brand: '',
                     license: '',
                     dead_weight: 0,
                     city: '',
                 },
                 editCarRules: {
-                    owner_id: [{required: true, message: '请输入拥有者ID', trigger: 'blur'},],
                     brand: [{required: true, message: '请输入车辆品牌', trigger: 'blur'},],
                     license: [{required: true, message: '请输入车辆车牌', trigger: 'blur'},],
                     dead_weight: [{required: true, message: '请输入载重量', trigger: 'blur'},],
@@ -124,7 +118,6 @@
             editCar() {
                 this.$refs.editCarFormRef.validate(async valid => {
                     if(!valid) return
-                    this.editCarForm.ownerid = this.editCarForm.owner_id
                     this.editCarForm.deadweight = this.editCarForm.dead_weight
                     const result = await this.$http.put('/cars/' + this.editCarForm.id , this.editCarForm)
                     console.log(result)

@@ -17,7 +17,7 @@ import NProgress from 'nprogress' // nprogress
 import 'nprogress/nprogress.css'  // nprogress
 
 // Set axios baseURL
-axios.defaults.baseURL = "http://192.168.30.100:8888/api/v1/"
+axios.defaults.baseURL = "http://127.0.0.1:8888/api/v1/"
 
 // Set axios request interceptor
 axios.interceptors.request.use(config => {

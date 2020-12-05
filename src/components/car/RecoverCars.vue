@@ -11,7 +11,7 @@
             <!-- Input -->
             <el-row :gutter="20">
                 <el-col :span="7">
-                    <el-input v-model="queryInfo.query" placeholder="请输入内容" clearable @keyup.enter.native="getCarList" @clear="getCarList">
+                    <el-input v-model="queryInfo.query" placeholder="请输入车辆牌照号码" clearable @keyup.enter.native="getCarList" @clear="getCarList">
                         <el-button slot="append" icon="el-icon-search" @click="getCarList"></el-button>
                     </el-input>
                 </el-col>
@@ -19,7 +19,6 @@
             <!-- Table -->
             <el-table :data="carList" stripe>
                 <el-table-column label="#" type="index"></el-table-column>
-                <el-table-column label="拥有者" prop="username"></el-table-column>
                 <el-table-column label="品牌" prop="brand"></el-table-column>
                 <el-table-column label="车牌" prop="license"></el-table-column>
                 <el-table-column label="载重量" prop="dead_weight"></el-table-column>

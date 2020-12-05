@@ -11,9 +11,15 @@
             <!-- Input -->
             <el-row :gutter="20">
                 <el-col :span="7">
-                    <el-input v-model="queryInfo.query" placeholder="请输入内容" clearable @keyup.enter.native="getUserList" @clear="getUserList">
+                    <el-input v-model="queryInfo.query" placeholder="请输入用户名或地区" clearable @keyup.enter.native="getUserList" @clear="getUserList">
                         <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
                     </el-input>
+                    <!-- Select -->
+                </el-col>
+                <el-col :span="4">
+                    <el-select v-model="queryInfo.category" placeholder="请选择" @change="getUserList">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
                 </el-col>
                 <el-col :span="4">
                     <el-button type="primary" @click="addDialogVisible = true">添加用户</el-button>
@@ -131,7 +137,14 @@
                     query: "",
                     pagenum: 1,
                     pagesize: 10,
+                    category: "all",
                 },
+                options: [
+                    {value: 'all', label: '全部'},
+                    {value: 'false', label: '空闲状态'},
+                    {value: 'true', label: '正在作业'},
+                    {value: 'city', label: '城市'},
+                ],
                 addUserForm: {
                     username: '',
                     password: '',
@@ -170,11 +183,11 @@
         created() {this.getUserList()},
         methods: {
             async getUserList() {
+                this.userList.splice(0, this.userList.length)
                 var result = await this.$http.get('/users', {params: this.queryInfo})
                 console.log(result.data)
                 if(result.data.code !== 200) return this.$message.error(result.data.msg)
                 this.$message.success(result.data.msg)
-
                 this.userList = result.data.data.users
                 this.userListSize = result.data.data.total
             },

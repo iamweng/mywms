@@ -11,9 +11,14 @@
             <el-row :gutter="20">
                 <!-- Input -->
                 <el-col :span="8">
-                    <el-input placeholder="请输入内容" v-model="queryInfo.query" @keyup.enter.native="getGoodsList" @clear="getGoodsList" clearable>
+                    <el-input placeholder="请输入货物名称" v-model="queryInfo.query" @keyup.enter.native="getGoodsList" @clear="getGoodsList" clearable>
                         <el-button slot="append" icon="el-icon-search" @click="getGoodsList"></el-button>
                     </el-input>
+                </el-col>
+                <el-col :span="4">
+                    <el-select v-model="queryInfo.category" placeholder="请选择" @change="getGoodsList">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
                 </el-col>
                 <!-- Button -->
                 <el-col :span="4"><el-button type="primary" @click="showAddGoodsDialog">添加商品</el-button></el-col>
@@ -26,6 +31,7 @@
                 <el-table-column label="重量" prop="weight"></el-table-column>
                 <el-table-column label="出发城市" prop="from_city"></el-table-column>
                 <el-table-column label="到达城市" prop="to_city"></el-table-column>
+                <el-table-column label="运输单号" prop="courier_number" width="200px"></el-table-column>
                 <el-table-column label="运输状态">
                     <template slot-scope="scope">
                         <!-- Switch -->
@@ -96,7 +102,25 @@ export default {
                 query: '',
                 pagenum: 1,
                 pagesize: 10,
+                category: "all",
             },
+                options: [
+                    {value: 'all', label: '全部'},
+                    {value: 'price_asc', label: '价格正序'},
+                    {value: 'price_desc', label: '价格倒序'},
+                    {value: 'price_more', label: '价格大于'},
+                    {value: 'price_less', label: '价格小于'},
+                    {value: 'weight_asc', label: '重量正序'},
+                    {value: 'weight_desc', label: '重量倒序'},
+                    {value: 'weight_more', label: '重量大于'},
+                    {value: 'weight_less', label: '重量小于'},
+                    {value: 'from_city', label: '出发城市'},
+                    {value: 'to_city', label: '目标城市'},
+                    {value: 'courier_true', label: '正在运输'},
+                    {value: 'courier_false', label: '暂未运输'},
+                    {value: 'goods_true', label: '已经到达'},
+                    {value: 'goods_false', label: '还未到达'},
+                ],
             editGoodsForm: {},
             addGoodsForm: {
                 name: "",
@@ -136,6 +160,7 @@ export default {
             this.getGoodsList()
         },
         async getGoodsList() {
+            this.goodsList.splice(0, this.goodsList.length)
             const result = await this.$http.get('/goods',{params: this.queryInfo})
             console.log(result)
             if(result.data.code !== 200) return this.$message.error(result.data.msg)

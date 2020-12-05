@@ -11,9 +11,14 @@
             <!-- Input -->
             <el-row :gutter="20">
                 <el-col :span="7">
-                    <el-input v-model="queryInfo.query" placeholder="请输入内容" clearable @keyup.enter.native="getCarList" @clear="getCarList">
+                    <el-input v-model="queryInfo.query" placeholder="请输入车辆牌照号码或所需条件" clearable @keyup.enter.native="getCarList" @clear="getCarList">
                         <el-button slot="append" icon="el-icon-search" @click="getCarList"></el-button>
                     </el-input>
+                </el-col>
+                <el-col :span="4">
+                    <el-select v-model="queryInfo.category" placeholder="请选择" @change="getCarList">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
                 </el-col>
                 <el-col :span="4">
                     <el-button type="primary" @click="showAddDialog">添加车辆</el-button>
@@ -22,7 +27,6 @@
             <!-- Table -->
             <el-table :data="carList" stripe>
                 <el-table-column label="#" type="index"></el-table-column>
-                <el-table-column label="所有者" prop="username"></el-table-column>
                 <el-table-column label="品牌" prop="brand"></el-table-column>
                 <el-table-column label="车牌" prop="license"></el-table-column>
                 <el-table-column label="载重量" prop="dead_weight"></el-table-column>
@@ -48,11 +52,6 @@
         <!-- Add car dialog -->
         <el-dialog title="添加车辆" :visible.sync="addDialogVisible" width="40%" @close="addCarCloseDialog">
             <el-form :model="addCarForm" :rules="addCarRules" ref="addCarFormRef" label-width="80px">
-                <el-form-item label="拥有者" prop="ownerid">
-                <el-select v-model="addCarForm.username" placeholder="请选择">
-                    <el-option v-for="(item, index) in userList" :key="index" :label="item.username" :value="item.username"> </el-option>
-                </el-select>
-                </el-form-item>
                 <el-form-item label="品牌" prop="brand">
                     <el-input v-model="addCarForm.brand" @keyup.enter.native="addCar"></el-input>
                 </el-form-item>
@@ -74,9 +73,6 @@
         <!-- Edit car dialog -->
         <el-dialog title="修改车辆" :visible.sync="editDialogVisible" width="40%" @close="editCarCloseDialog">
             <el-form :model="editCarForm" :rules="editCarRules" ref="editCarFormRef" label-width="80px">
-                <el-form-item label="拥有者" prop="username">
-                    <el-input v-model="editCarForm.username" disabled></el-input>
-                </el-form-item>
                 <el-form-item label="品牌" prop="brand">
                     <el-input v-model="editCarForm.brand" @keyup.enter.native="editCar"></el-input>
                 </el-form-item>
@@ -106,30 +102,38 @@
                     query: '',
                     pagenum: 1,
                     pagesize: 10,
+                    category: "all",
                 },
+                options: [
+                    {value: 'all', label: '全部'},
+                    {value: 'false', label: '空闲状态'},
+                    {value: 'true', label: '正在作业'},
+                    {value: 'city', label: '城市'},
+                    {value: 'brand', label: '品牌'},
+                    {value: 'asc', label: '载重量正序'},
+                    {value: 'desc', label: '载重量倒序'},
+                    {value: 'more', label: '载重量大于'},
+                    {value: 'less', label: '载重量小于'},
+                ],
                 addCarForm: {
-                    username: "",
                     brand: '',
                     license: '',
                     deadweight: null,
                     city: '',
                 },
                 editCarForm: {
-                    username: "",
                     brand: '',
                     license: '',
                     dead_weight: 0,
                     city: '',
                 },
                 addCarRules: {
-                    username: [{required: true, message: '请输入拥有者名', trigger: 'blur'},],
                     brand: [{required: true, message: '请输入车辆品牌', trigger: 'blur'},],
                     license: [{required: true, message: '请输入车辆车牌', trigger: 'blur'},],
                     deadweight: [{required: true, message: '请输入载重量', trigger: 'blur'},],
                     city: [{required:true,message: '请输入地区', trigger: 'blur'}],
                 },
                 editCarRules: {
-                    username: [{required: true, message: '请输入拥有者名', trigger: 'blur'},],
                     brand: [{required: true, message: '请输入车辆品牌', trigger: 'blur'},],
                     license: [{required: true, message: '请输入车辆车牌', trigger: 'blur'},],
                     dead_weight: [{required: true, message: '请输入载重量', trigger: 'blur'},],
@@ -145,14 +149,8 @@
         },
         created() {this.getCarList()},
         methods: {
-            async getUserList() {
-                var result = await this.$http.get('/users?pagenum=1&pagesize=10000&query=&status=')
-                console.log(result.data)
-                if(result.data.code !== 200) return this.$message.error(result.data.msg)
-                this.$message.success(result.data.msg)
-                this.userList = result.data.data.users
-            },
             async getCarList() {
+                this.carList.splice(0, this.carList.length)
                 var result = await this.$http.get('/cars', {params: this.queryInfo})
                 console.log(result.data)
                 if(result.data.code !== 200) return this.$message.error(result.data.msg)
@@ -205,7 +203,6 @@
             },
             showAddDialog() {
                 this.addDialogVisible = true
-                this.getUserList()
             },
             editCar() {
                 this.$refs.editCarFormRef.validate(async valid => {

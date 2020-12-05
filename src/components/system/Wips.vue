@@ -16,7 +16,7 @@
             </el-col>
             <el-col :span="4">
                 <!-- Select -->
-                <el-select v-model="queryInfo.value" placeholder="请选择" @change="getWipList">
+                <el-select v-model="queryInfo.category" placeholder="请选择" @change="getWipList">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-col>
@@ -64,15 +64,15 @@
                     query: '',
                     pagenum: 1,
                     pagesize: 10,
-                    value: "all",
+                    category: "all",
                 },
                 wipList: [],
                 options: [
-                {value: 'all', label: '全部'},
-                {value: 'processed', label: '已处理'},
-                {value: 'untreated', label: '未处理'},
-                {value: 'asc', label: '时间正序'},
-                {value: 'desc', label: '时间倒序'},
+                    {value: 'all', label: '全部'},
+                    {value: 'processed', label: '已处理'},
+                    {value: 'untreated', label: '未处理'},
+                    {value: 'asc', label: '时间正序'},
+                    {value: 'desc', label: '时间倒序'},
                 ],
                 wipListSize: 0,
                 wipDialogVisible: false,

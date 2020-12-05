@@ -11,7 +11,7 @@
             <!-- Input -->
             <el-row :gutter="20">
                 <el-col :span="7">
-                    <el-input v-model="userid" placeholder="请输入内容" clearable @keyup.enter.native="getUserList" @clear="getUserList">
+                    <el-input v-model="userid" placeholder="请输入用户 ID" clearable @keyup.enter.native="getUserList" @clear="getUserList">
                         <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
                     </el-input>
                 </el-col>

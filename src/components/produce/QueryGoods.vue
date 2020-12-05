@@ -11,7 +11,7 @@
             <el-row :gutter="20">
                 <!-- Input -->
                 <el-col :span="8">
-                    <el-input placeholder="请输入内容" v-model="goodID" @clear="getGoodsList" @keyup.enter.native="getGoodsList" clearable >
+                    <el-input placeholder="请输入货物 ID" v-model="goodID" @clear="getGoodsList" @keyup.enter.native="getGoodsList" clearable >
                         <el-button slot="append" icon="el-icon-search" @click="getGoodsList"></el-button>
                     </el-input>
                 </el-col>
@@ -24,6 +24,7 @@
                 <el-table-column label="重量" prop="weight"></el-table-column>
                 <el-table-column label="出发城市" prop="from_city"></el-table-column>
                 <el-table-column label="到达城市" prop="to_city"></el-table-column>
+                <el-table-column label="运输单号" prop="courier_number" width="200px"></el-table-column>
                 <el-table-column label="运输状态">
                     <template slot-scope="scope">
                         <!-- Switch -->
