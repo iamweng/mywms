@@ -21,7 +21,7 @@
                 <el-card>
                     <h3>货物概况</h3>
                     <p class="align_center">目前全部货物总数为：{{ goodsList.length }}</p>
-                    <p class="align_center">目前未开始运输的货物数为：{{ unstartedGoods }}</p>
+                    <p class="align_center">目前未开始运输的货物数为：{{ unstartedGoods}}</p>
                     <p class="align_center">目前未结束运输的货物数为：{{ undoneGoods }}</p>
                 </el-card>
             </el-col>
@@ -52,10 +52,12 @@ export default {
             queryInfo: {query: '', pagesize: 10000, pagenum: 1, category: "all"},
             orderList: [],
             undoneOrder: 0,
+            doneOrder: 0,
             unstartedOrder: 0,
             goodsList: [],
             undoneGoods: 0,
             unstartedGoods: 0,
+            doneGoods: 0,
             userList: [],
             undoneUser: 0,
             unstartedUser: 0,
@@ -78,14 +80,16 @@ export default {
         },
         async getOrderList() {
             const result = await this.$http.get('orders',{params: this.queryInfo})
-            console.log(result)
             if(result.data.code !== 200) return this.$message.error(result.data.msg)
+            console.log(result)
             this.$message.success(result.data.msg)
             this.orderList = result.data.data.orders
             for (var i = 0; i < this.orderList.length; i++) {
-                if (this.orderList[i].status == 0 && this.orderList[i].courier_status == 1) this.undoneOrder++
+                if (this.orderList[i].courier_status == 0) this.unstartedOrder++
+                if (this.orderList[i].courier_status == 1 && this.orderList[i].status == 1) this.doneOrder++
             }
-            this.unstartedOrder = this.orderList.length - this.undoneOrder
+            this.undoneOrder = this.orderList.length - (this.unstartedOrder + this.doneOrder)
+            
         },
         async getGoodsList() {
             const result = await this.$http.get('/goods',{params: this.queryInfo})
@@ -95,8 +99,10 @@ export default {
             this.goodsList = result.data.data.goods
             for (var i = 0; i < this.goodsList.length; i++) {
                 if (this.goodsList[i].status == 0 && this.goodsList[i].courier_status == 1) this.undoneGoods++
+                if (this.goodsList[i].status == 1 && this.goodsList[i].courier_status == 1) this.doneGoods++
+                
             }
-            this.unstartedGoods = this.goodsList.length - this.undoneGoods
+            this.unstartedGoods = this.goodsList.length - this.undoneGoods  - this.doneGoods 
         },
         async getUserList() {
             const result = await this.$http.get('/users',{params: this.queryInfo})

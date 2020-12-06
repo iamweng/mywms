@@ -29,6 +29,7 @@
                 loginForm: {
                     mobile: "",
                     password: "",
+                    user: {},
                 },
                 loginFormRules: {
                     mobile: [
@@ -53,6 +54,9 @@
                     console.log(result)
                     // Login failed
                     if(result.data.code !== 201) return this.$message.error(result.data.msg)
+                    this.user = result.data.data.user
+                    if (this.user.role != "超级管理员" && this.user.role != "货物管理员" && this.user.role != "用户管理员" && this.user.role != "订单管理员" && this.user.role != "车辆管理员" &&
+                     this.user.role != "工单管理员" && this.user.role != "权限管理员" ) return this.$message.error("权限不足")
                     // Login successed
                     window.sessionStorage.setItem("token",result.data.data.token)  // Save token info
                     this.$router.push('/home') // Redirect
