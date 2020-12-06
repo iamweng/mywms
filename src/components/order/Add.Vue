@@ -35,7 +35,7 @@
                                     <el-option v-for="(item, index) in userList" :key="index" :label="item.username" :value="item.id"> </el-option>
                                 </el-select>
                         </el-form-item>
-                        <el-button type="primary" class="submitButton" @click="addOrder">添加商品</el-button>
+                        <el-button type="primary" class="submitButton" @click="addOrder">添加订单</el-button>
                     </el-tab-pane>
                 </el-tabs>
             </el-form>
@@ -89,9 +89,9 @@ export default {
             this.$message.success(result.data.msg)
             this.userList = result.data.data.users
             for (var i = 0; i < this.userList.length; i++) {
-                if (this.userList[i].status == true) {
+                if (this.userList[i].status) {
                     this.userList.splice(i, 1)
-                    i = 0
+                    i --
                 }
             }
         },
@@ -111,10 +111,11 @@ export default {
             if(result.data.code !== 200) return this.$message.error(result.data.msg)
             this.$message.success(result.data.msg)
             this.carList = result.data.data.cars
-            for (var i = 0; i < this.carList.length; i++) {
-                if (this.carList[i].dead_weight < this.goodsList[goodsIndex].weight || this.carList[i].statys == true) {
+            for (var i = 0; i < this.carList.length; i++) { 
+                console.log(this.carList[i].status)
+                if (this.carList[i].dead_weight < this.goodsList[goodsIndex].weight || this.carList[i].status) {
                     this.carList.splice(i, 1)
-                    i--
+                    i-- 
                 }
             }
             this.getUserList()

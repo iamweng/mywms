@@ -14,6 +14,7 @@ import QueryCars from '../components/car/QueryCars.vue'
 
 import Roles from '../components/system/Roles.vue'
 import Wips from '../components/system/Wips.vue'
+import Admins from '../components/system/Admins.vue'
 
 
 import QueryGoods from '../components/produce/QueryGoods.vue'
@@ -45,6 +46,7 @@ const router =  new Router({
 
                 {path: '/roles', component: Roles},
                 {path: '/wips', component: Wips},
+                {path: '/admins', component: Admins},
 
                 {path: '/goods', component: Goods},
                 {path: '/querygoods', component: QueryGoods},

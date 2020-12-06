@@ -49,7 +49,7 @@
 export default {
     data() {
         return {
-            queryInfo: {query: '', pagesize: 10000, pagenum: 1, value: "all"},
+            queryInfo: {query: '', pagesize: 10000, pagenum: 1, category: "all"},
             orderList: [],
             undoneOrder: 0,
             unstartedOrder: 0,
